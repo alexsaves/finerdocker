@@ -1,1 +1,1 @@
-Run this command to start the db `docker-compose up`, to clear the database and start from scratch run `docker-compose down -v`
+Run this command to start the db `docker-compose up`, to clear the database and start from scratch delete the db folder under data

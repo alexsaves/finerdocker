@@ -4,10 +4,13 @@ services:
     container_name: finerink_mysql
     restart: always
     image: mysql:latest
+    ports:
+      - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: 'finerInk$'
-      MYSQL_USER: 'finer_admin'
-      MYSQL_PASS: 'finerPa$$'
+      MYSQL_DATABASE: 'finerinkprod'
+      MYSQL_ROOT_PASSWORD: 'FinerInk'
+      MYSQL_USER: 'finerAdmin'
+      MYSQL_PASSWORD: 'finerPass'
     volumes:
       - ./data/db:/var/lib/mysql
-      - ./data/schema:/docker-entrypoint-initdb.d
+      - ./data/schema/:/docker-entrypoint-initdb.d/
