@@ -1,0 +1,13 @@
+version: '2'
+services:
+  mysql:
+    container_name: finerink_mysql
+    restart: always
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: 'finerInk$'
+      MYSQL_USER: 'finer_admin'
+      MYSQL_PASS: 'finerPa$$'
+    volumes:
+      - ./data/db:/var/lib/mysql
+      - ./data/schema:/docker-entrypoint-initdb.d
