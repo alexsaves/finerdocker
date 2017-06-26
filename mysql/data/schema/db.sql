@@ -33,7 +33,7 @@ CREATE TABLE `accounts` (
   `pw_md5` varchar(32) NOT NULL,
   `accesstoken` varchar(256) DEFAULT NULL,
   `refreshtoken` varchar(256) DEFAULT NULL,
-  `fbid` int(10) unsigned DEFAULT '0',
+  `fbid` bigint unsigned DEFAULT '0',
   `linkedinid` varchar(32) DEFAULT NULL,
   `googleid` varchar(32) DEFAULT NULL,
   `email_verified` tinyint(4) NOT NULL DEFAULT '0',
