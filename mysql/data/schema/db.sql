@@ -33,7 +33,7 @@ CREATE TABLE `accounts` (
   `pw_md5` varchar(32) NOT NULL,
   `accesstoken` varchar(256) DEFAULT NULL,
   `refreshtoken` varchar(256) DEFAULT NULL,
-  `fbid` bigint unsigned DEFAULT '0',
+  `fbid` bigint(20) DEFAULT '0',
   `linkedinid` varchar(32) DEFAULT NULL,
   `googleid` varchar(32) DEFAULT NULL,
   `email_verified` tinyint(4) NOT NULL DEFAULT '0',
@@ -105,13 +105,14 @@ CREATE TABLE `org_account_associations` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `assoc_type` int(11) NOT NULL COMMENT '0 = admin\n1 = normal\n2 = read-only',
+  `perm_level` int(11) NOT NULL DEFAULT '2',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `org_assoc_idx` (`organization_id`),
   KEY `account_assoc_idx` (`account_id`),
   CONSTRAINT `account_assoc` FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `org_assoc` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -122,16 +123,18 @@ DROP TABLE IF EXISTS `org_invitations`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `org_invitations` (
-  `id` int(10) unsigned NOT NULL,
+  `uid` varchar(45) NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `email` varchar(45) NOT NULL,
   `organization_id` int(11) NOT NULL,
   `assoc_type` int(11) NOT NULL,
   `invited_by_account_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
+  `perm_level` int(11) NOT NULL DEFAULT '2',
+  UNIQUE KEY `emailorg` (`uid`) USING BTREE,
   KEY `invitedby_idx` (`invited_by_account_id`),
   KEY `inviteorg_idx` (`organization_id`),
+  KEY `uidUQ` (`uid`),
   CONSTRAINT `invitedby` FOREIGN KEY (`invited_by_account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `inviteorg` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -240,7 +243,7 @@ CREATE TABLE `responses` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `respondents_assoc_idx` (`respondent_id`),
   CONSTRAINT `respondents_assoc` FOREIGN KEY (`respondent_id`) REFERENCES `respondents` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -276,4 +279,4 @@ CREATE TABLE `surveys` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-06-20 21:22:48
+-- Dump completed on 2017-06-26 18:47:28
