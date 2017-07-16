@@ -84,6 +84,7 @@ finercommon
                                   console.log("ERROR".red, err);
                                 } else {
                                   console.log(("Created survey " + sv.name + " for " + org.name + " with guid \"" + sv.guid + "\"...").green);
+                                  console.log(("Load survey at http://localhost:8080/s/" + sv.guid).yellow)
                                   console.log("Done.");
                                   process.exit();
                                 }
