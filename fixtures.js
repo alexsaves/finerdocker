@@ -78,6 +78,7 @@ finercommon
                                 organization_id: org.id,
                                 prospect_id: prosp.id,
                                 guid: "testsurvey",
+                                theme: "bokehlight",
                                 survey_model: JSON.stringify(finercommon.models.Survey.getSurveyFixture())
                               }, (err, sv) => {
                                 if (err) {

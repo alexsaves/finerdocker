@@ -271,6 +271,7 @@ CREATE TABLE `surveys` (
   `survey_model` blob NOT NULL,
   `name` varchar(50) NOT NULL,
   `organization_id` int(11) NOT NULL,
+  `theme` varchar(12) NOT NULL,
   `is_active` tinyint(4) UNSIGNED NOT NULL DEFAULT 1,
   PRIMARY KEY (`guid`),
   UNIQUE KEY `id_UNIQUE` (`guid`),
