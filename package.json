@@ -1,0 +1,42 @@
+{
+  "name": "docker",
+  "version": "1.0.0",
+  "description": "Run this command to start the db `docker-compose up`, to clear the database and start from scratch delete the db folder under data",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "fixtures": "node fixtures.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://alexsaves@github.com/thefinerink/docker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thefinerink/docker/issues"
+  },
+  "homepage": "https://github.com/thefinerink/docker#readme",
+  "dependencies": {
+    "colors": "^1.1.2",
+    "finercommon": "git+https://1e37470bfae9c1cb98c12c99b100edaea16bc73e:x-oauth-basic@github.com/thefinerink/finercommon.git",
+    "md5": "^2.2.1",
+    "mysql": "^2.13.0"
+  },
+  "config": {
+    "db": {
+      "host": "localhost",
+      "user": "finerAdmin",
+      "pw": "finerPass",
+      "db": "finerinkprod",
+      "ssl": "false"
+    },
+    "dbprod": {
+      "host": "finerinkprod.ckumtmamqoyw.us-west-2.rds.amazonaws.com",
+      "user": "finerinkadmin",
+      "pw": "J39dK$sl_1!",
+      "db": "finerinkprod",
+      "ssl": "true"
+    }
+  }
+}
