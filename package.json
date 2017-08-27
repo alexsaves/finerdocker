@@ -30,6 +30,13 @@
       "pw": "finerPass",
       "db": "finerinkprod",
       "ssl": "false"
+    },
+    "dbprod": {
+      "host": "finerinkprod.ckumtmamqoyw.us-west-2.rds.amazonaws.com",
+      "user": "finerinkadmin",
+      "pw": "J39dK$sl_1!",
+      "db": "finerinkprod",
+      "ssl": "true"
     }
   }
 }
