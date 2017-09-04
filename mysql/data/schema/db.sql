@@ -237,24 +237,24 @@ DROP TABLE IF EXISTS `responses`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `responses` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `respondent_id` bigint(20) unsigned NOT NULL,
-  `survey_guid` char(14) NOT NULL,
-  `q_id` varchar(20) NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
-  `n_val` float DEFAULT NULL,
-  `other_selected` tinyint(4) NOT NULL DEFAULT 0,
-  `short_ans` varchar(10) DEFAULT NULL,
-  `medium_ans` varchar(100) DEFAULT NULL,
-  `other_ans` varchar(100) DEFAULT NULL,
-  `long_ans` longtext,
-  `is_active` tinyint(4) UNSIGNED NOT NULL DEFAULT 1,
+  `respondent_id` bigint(20) unsigned NOT NULL,
+  `survey_guid` char(14) NOT NULL,
+  `name` varchar(25) NOT NULL,
+  `intval` int(11) DEFAULT NULL,
+  `floatval` float DEFAULT NULL,
+  `other_selected` tinyint(4) NOT NULL DEFAULT '0',
+  `is_active` tinyint(4) unsigned NOT NULL DEFAULT '1',
+  `openend` longtext,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `respondents_assoc_idx` (`respondent_id`),
+  KEY `survname` (`survey_guid`,`name`),
   CONSTRAINT `respondents_assoc` FOREIGN KEY (`respondent_id`) REFERENCES `respondents` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
 
 --
 -- Table structure for table `surveys`
