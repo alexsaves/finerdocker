@@ -47,6 +47,75 @@ CREATE TABLE `accounts` (
 ) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+DROP TABLE IF EXISTS `crm_accounts`;
+
+CREATE TABLE `crm_accounts` (
+  `account_number` char(8) NOT NULL,
+  `uid` mediumint(9) NOT NULL AUTO_INCREMENT,
+  `owner_id` varchar(20) DEFAULT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  `type` varchar(40) DEFAULT NULL,
+  `industry` varchar(40) DEFAULT NULL,
+  `billing_country` varchar(40) DEFAULT NULL,
+  `billing_city` varchar(40) DEFAULT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `integration_id` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`uid`),
+  UNIQUE KEY `uid_UNIQUE` (`uid`),
+  KEY `integration_fk_idx` (`integration_id`),
+  CONSTRAINT `integration_fk` FOREIGN KEY (`integration_id`) REFERENCES `crm_integrations` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS `crm_organizations`;
+
+CREATE TABLE `crm_organizations` (
+  `id` mediumint(40) NOT NULL AUTO_INCREMENT,
+  `org_id` varchar(45) DEFAULT NULL,
+  `instance_name` varchar(45) DEFAULT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  `organization_type` varchar(45) DEFAULT NULL,
+  `primary_contact` varchar(45) DEFAULT NULL,
+  `country` varchar(45) DEFAULT NULL,
+  `city` varchar(45) DEFAULT NULL,
+  `integration_id` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `fk_org_integration_idx` (`integration_id`),
+  CONSTRAINT `fk_org_integration` FOREIGN KEY (`integration_id`) REFERENCES `crm_integrations` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS `crm_roles`;
+
+CREATE TABLE `crm_roles` (
+  `uid` mediumint(45) NOT NULL AUTO_INCREMENT,
+  `parents_role_id` varchar(45) DEFAULT NULL,
+  `name` varchar(45) DEFAULT NULL,
+  `role_id` varchar(45) DEFAULT NULL,
+  `integration_id` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`uid`),
+  KEY `ft_roles_integration_idx` (`integration_id`),
+  CONSTRAINT `ft_roles_integration` FOREIGN KEY (`integration_id`) REFERENCES `crm_integrations` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=109 DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS `crm_users`;
+
+CREATE TABLE `crm_users` (
+  `uid` mediumint(40) NOT NULL AUTO_INCREMENT,
+  `email` varchar(45) DEFAULT NULL,
+  `first_name` varchar(100) DEFAULT NULL,
+  `last_name` varchar(100) DEFAULT NULL,
+  `name` varchar(200) DEFAULT NULL,
+  `username` varchar(200) DEFAULT NULL,
+  `user_type` varchar(45) DEFAULT NULL,
+  `company_name` varchar(45) DEFAULT NULL,
+  `community_nickname` varchar(45) DEFAULT NULL,
+  `role_id` varchar(45) DEFAULT NULL,
+  `integration_id` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`uid`),
+  KEY `integration_fk_idx` (`integration_id`),
+  CONSTRAINT `fk_user_integration` FOREIGN KEY (`integration_id`) REFERENCES `crm_integrations` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;
+
 --
 -- Table structure for table `crm_integrations`
 --
