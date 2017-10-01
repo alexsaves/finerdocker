@@ -36,7 +36,7 @@ CREATE TABLE `accounts` (
   `fbid` bigint(20) DEFAULT '0',
   `linkedinid` varchar(32) DEFAULT NULL,
   `googleid` varchar(32) DEFAULT NULL,
-  `email_verified` tinyint(4) NOT NULL DEFAULT 0,  
+  `emailverified` tinyint(4) NOT NULL DEFAULT 0,  
   `location` varchar(256) DEFAULT NULL,
   `salesforceid` varchar(45) DEFAULT NULL,
   `profile_image_uid` varchar(36) DEFAULT NULL,
