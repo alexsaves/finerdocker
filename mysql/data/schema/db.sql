@@ -2,7 +2,7 @@ CREATE DATABASE  IF NOT EXISTS `finerinkprod` /*!40100 DEFAULT CHARACTER SET lat
 USE `finerinkprod`;
 -- MySQL dump 10.13  Distrib 5.7.17, for macos10.12 (x86_64)
 --
--- Host: localhost    Database: finerinkprod
+-- Host: 127.0.0.1    Database: finerinkprod
 -- ------------------------------------------------------
 -- Server version	5.7.18
 
@@ -48,6 +48,31 @@ CREATE TABLE `accounts` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `approvals`
+--
+
+DROP TABLE IF EXISTS `approvals`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `approvals` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `sendEmail` tinyint(4) DEFAULT NULL,
+  `sendSMS` tinyint(4) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `sendState` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '0 = Not sent\n1 = Sent\n',
+  `created_by_account_id` int(11) DEFAULT NULL,
+  `organization_id` int(11) NOT NULL DEFAULT '0',
+  `crm_account_id` varchar(45) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `orgapprovalid_idx` (`organization_id`),
+  KEY `contactaccountid_idx` (`crm_account_id`),
+  CONSTRAINT `contactaccountid` FOREIGN KEY (`crm_account_id`) REFERENCES `crm_contacts` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `orgapprovalid` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `crm_accounts`
 --
 
@@ -73,7 +98,7 @@ DROP TABLE IF EXISTS `crm_contacts`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `crm_contacts` (
-  `Id` varchar(100) NOT NULL,
+  `Id` varchar(45) NOT NULL,
   `AccountId` varchar(100) DEFAULT NULL,
   `OwnerId` varchar(100) DEFAULT NULL,
   `Title` varchar(100) DEFAULT NULL,
@@ -291,27 +316,6 @@ CREATE TABLE `organizations` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `prospects`
---
-
-DROP TABLE IF EXISTS `prospects`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `prospects` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL,
-  `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  `organization_id` int(11) NOT NULL,
-  `is_active` tinyint(4) unsigned NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `id_UNIQUE` (`id`),
-  KEY `org_assoc_id_idx` (`organization_id`),
-  CONSTRAINT `org_assoc_id` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `reset_pw_invitations`
 --
 
@@ -348,11 +352,12 @@ CREATE TABLE `respondents` (
   `ip_addr` varchar(45) NOT NULL,
   `time_zone` int(11) NOT NULL,
   `is_active` tinyint(4) unsigned NOT NULL DEFAULT '1',
+  `approval_id` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `survey_assoc_idx` (`survey_guid`),
   CONSTRAINT `survey_assoc` FOREIGN KEY (`survey_guid`) REFERENCES `surveys` (`guid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -461,4 +466,4 @@ CREATE TABLE `surveys` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-02 11:04:21
+-- Dump completed on 2017-11-02 11:21:43
