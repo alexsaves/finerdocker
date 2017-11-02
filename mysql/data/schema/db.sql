@@ -63,11 +63,14 @@ CREATE TABLE `approvals` (
   `sendState` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '0 = Not sent\n1 = Sent\n',
   `created_by_account_id` int(11) DEFAULT NULL,
   `organization_id` int(11) NOT NULL DEFAULT '0',
-  `crm_account_id` varchar(45) NOT NULL,
+  `crm_contact_id` varchar(45) NOT NULL,
+  `opportunity_id` varchar(36) NOT NULL,
   PRIMARY KEY (`guid`),
+  UNIQUE KEY `orgactuq` (`crm_contact_id`,`organization_id`),
   KEY `orgapprovalid_idx` (`organization_id`),
-  KEY `contactaccountid_idx` (`crm_account_id`),
-  CONSTRAINT `contactaccountid` FOREIGN KEY (`crm_account_id`) REFERENCES `crm_contacts` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  KEY `contactaccountid_idx` (`crm_contact_id`),
+  KEY `oppidlink_idx` (`opportunity_id`),
+  CONSTRAINT `contactaccountid` FOREIGN KEY (`crm_contact_id`) REFERENCES `crm_contacts` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `orgapprovalid` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -467,4 +470,4 @@ CREATE TABLE `surveys` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-02 12:40:59
+-- Dump completed on 2017-11-02 15:03:03
