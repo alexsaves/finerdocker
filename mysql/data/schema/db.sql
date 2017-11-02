@@ -44,7 +44,7 @@ CREATE TABLE `accounts` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -146,7 +146,7 @@ DROP TABLE IF EXISTS `crm_opportunities`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `crm_opportunities` (
-  `id` varchar(100) NOT NULL,
+  `id` varchar(36) NOT NULL,
   `AccountId` varchar(100) DEFAULT NULL,
   `Amount` bigint(20) DEFAULT NULL,
   `IsClosed` tinyint(4) DEFAULT NULL,
@@ -268,7 +268,7 @@ CREATE TABLE `org_account_associations` (
   KEY `account_assoc_idx` (`account_id`),
   CONSTRAINT `account_assoc` FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `org_assoc` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -312,7 +312,7 @@ CREATE TABLE `organizations` (
   `is_active` tinyint(4) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -440,7 +440,6 @@ DROP TABLE IF EXISTS `surveys`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `surveys` (
   `guid` char(14) NOT NULL,
-  `prospect_id` int(11) NOT NULL,
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `survey_model` blob NOT NULL,
@@ -448,12 +447,14 @@ CREATE TABLE `surveys` (
   `organization_id` int(11) NOT NULL,
   `theme` varchar(12) NOT NULL,
   `is_active` tinyint(4) unsigned NOT NULL DEFAULT '1',
+  `survey_type` tinyint(4) NOT NULL,
+  `opportunity_id` varchar(36) NOT NULL,
   PRIMARY KEY (`guid`),
   UNIQUE KEY `id_UNIQUE` (`guid`),
-  KEY `prospect_assoc_idx` (`prospect_id`),
   KEY `org_assoc_idx` (`organization_id`),
-  CONSTRAINT `org_assoc_sv` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `prospect_assoc` FOREIGN KEY (`prospect_id`) REFERENCES `prospects` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  KEY `oppidlink_idx` (`opportunity_id`),
+  CONSTRAINT `oppidlink` FOREIGN KEY (`opportunity_id`) REFERENCES `crm_opportunities` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `org_assoc_sv` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -466,4 +467,4 @@ CREATE TABLE `surveys` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-02 11:21:43
+-- Dump completed on 2017-11-02 12:01:16
