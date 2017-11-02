@@ -2,7 +2,7 @@ CREATE DATABASE  IF NOT EXISTS `finerinkprod` /*!40100 DEFAULT CHARACTER SET lat
 USE `finerinkprod`;
 -- MySQL dump 10.13  Distrib 5.7.17, for macos10.12 (x86_64)
 --
--- Host: 127.0.0.1    Database: finerinkprod
+-- Host: localhost    Database: finerinkprod
 -- ------------------------------------------------------
 -- Server version	5.7.18
 
@@ -44,7 +44,7 @@ CREATE TABLE `accounts` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -87,7 +87,7 @@ CREATE TABLE `crm_accounts` (
   `AccountNumber` varchar(100) DEFAULT NULL,
   `Name` varchar(100) DEFAULT NULL,
   `OwnerId` varchar(100) DEFAULT NULL,
-  `Metadata` varchar(1000) DEFAULT NULL,
+  `Metadata` blob,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `uid_UNIQUE` (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -109,7 +109,7 @@ CREATE TABLE `crm_contacts` (
   `LastName` varchar(100) DEFAULT NULL,
   `Email` varchar(100) DEFAULT NULL,
   `Department` varchar(100) DEFAULT NULL,
-  `Metadata` varchar(5000) DEFAULT NULL,
+  `Metadata` blob,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `Id_UNIQUE` (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -152,11 +152,11 @@ CREATE TABLE `crm_opportunities` (
   `id` varchar(36) NOT NULL,
   `AccountId` varchar(100) DEFAULT NULL,
   `Amount` bigint(20) DEFAULT NULL,
-  `IsClosed` tinyint(4) DEFAULT NULL,
-  `IsWon` tinyint(4) DEFAULT NULL,
+  `IsClosed` varchar(10) DEFAULT NULL,
+  `IsWon` varchar(10) DEFAULT NULL,
   `OwnerId` varchar(100) DEFAULT NULL,
   `StageName` varchar(45) DEFAULT NULL,
-  `Metadata` varchar(5000) DEFAULT NULL,
+  `Metadata` blob,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -219,7 +219,7 @@ CREATE TABLE `crm_users` (
   `Name` varchar(200) DEFAULT NULL,
   `Email` varchar(100) DEFAULT NULL,
   `Username` varchar(45) DEFAULT NULL,
-  `Metadata` varchar(1000) DEFAULT NULL,
+  `Metadata` blob,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `id_UNIQUE` (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -271,7 +271,7 @@ CREATE TABLE `org_account_associations` (
   KEY `account_assoc_idx` (`account_id`),
   CONSTRAINT `account_assoc` FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `org_assoc` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -315,7 +315,7 @@ CREATE TABLE `organizations` (
   `is_active` tinyint(4) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -360,7 +360,7 @@ CREATE TABLE `respondents` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `survey_assoc_idx` (`survey_guid`),
   CONSTRAINT `survey_assoc` FOREIGN KEY (`survey_guid`) REFERENCES `surveys` (`guid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -470,4 +470,4 @@ CREATE TABLE `surveys` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-02 15:03:03
+-- Dump completed on 2017-11-02 15:51:44
