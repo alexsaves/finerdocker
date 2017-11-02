@@ -55,7 +55,7 @@ DROP TABLE IF EXISTS `approvals`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `approvals` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `guid` char(14) NOT NULL,
   `sendEmail` tinyint(4) DEFAULT NULL,
   `sendSMS` tinyint(4) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
@@ -64,7 +64,7 @@ CREATE TABLE `approvals` (
   `created_by_account_id` int(11) DEFAULT NULL,
   `organization_id` int(11) NOT NULL DEFAULT '0',
   `crm_account_id` varchar(45) NOT NULL,
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`guid`),
   KEY `orgapprovalid_idx` (`organization_id`),
   KEY `contactaccountid_idx` (`crm_account_id`),
   CONSTRAINT `contactaccountid` FOREIGN KEY (`crm_account_id`) REFERENCES `crm_contacts` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -352,7 +352,7 @@ CREATE TABLE `respondents` (
   `ip_addr` varchar(45) NOT NULL,
   `time_zone` int(11) NOT NULL,
   `is_active` tinyint(4) unsigned NOT NULL DEFAULT '1',
-  `approval_id` int(10) unsigned NOT NULL,
+  `approval_guid` char(14) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `survey_assoc_idx` (`survey_guid`),
@@ -467,4 +467,4 @@ CREATE TABLE `surveys` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-02 12:01:16
+-- Dump completed on 2017-11-02 12:40:59
