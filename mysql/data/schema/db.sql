@@ -1,8 +1,6 @@
-CREATE DATABASE  IF NOT EXISTS `finerinkprod` /*!40100 DEFAULT CHARACTER SET latin1 */;
-USE `finerinkprod`;
 -- MySQL dump 10.13  Distrib 5.7.17, for macos10.12 (x86_64)
 --
--- Host: 127.0.0.1    Database: finerinkprod
+-- Host: localhost    Database: finerinkprod
 -- ------------------------------------------------------
 -- Server version	5.7.18
 
@@ -41,6 +39,7 @@ CREATE TABLE `accounts` (
   `salesforceid` varchar(45) DEFAULT NULL,
   `profile_image_uid` varchar(36) DEFAULT NULL,
   `is_active` tinyint(4) unsigned NOT NULL DEFAULT '1',
+  `can_approve` blob,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `email_UNIQUE` (`email`)
@@ -136,8 +135,8 @@ CREATE TABLE `crm_integrations` (
   `uq` varchar(100) NOT NULL,
   `is_active` tinyint(4) unsigned NOT NULL DEFAULT '1',
   `connection_name` varchar(1000) DEFAULT NULL,
-  `owner_names` varchar(4000) DEFAULT NULL,
-  `owner_roles` varchar(4000) DEFAULT NULL,
+  `owner_names` blob,
+  `owner_roles` blob,
   UNIQUE KEY `uid_UNIQUE` (`uid`),
   UNIQUE KEY `uq_UNIQUE` (`uq`),
   KEY `forgi_idx` (`organization_id`),
@@ -364,7 +363,7 @@ CREATE TABLE `respondents` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `survey_assoc_idx` (`survey_guid`),
   CONSTRAINT `survey_assoc` FOREIGN KEY (`survey_guid`) REFERENCES `surveys` (`guid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -435,7 +434,7 @@ CREATE TABLE `responses` (
   KEY `respondents_assoc_idx` (`respondent_id`),
   KEY `survname` (`survey_guid`,`name`),
   CONSTRAINT `respondents_assoc` FOREIGN KEY (`respondent_id`) REFERENCES `respondents` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=492 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -474,4 +473,4 @@ CREATE TABLE `surveys` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-03 10:15:45
+-- Dump completed on 2017-11-03 17:56:10
