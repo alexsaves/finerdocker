@@ -365,6 +365,7 @@ CREATE TABLE `respondents` (
   CONSTRAINT `survey_assoc` FOREIGN KEY (`survey_guid`) REFERENCES `surveys` (`guid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+ALTER TABLE `respondents` AUTO_INCREMENT=98496;
 
 --
 -- Table structure for table `responses`
@@ -379,7 +380,7 @@ CREATE TABLE `responses` (
   `updated_at` datetime NOT NULL,
   `respondent_id` bigint(20) unsigned NOT NULL,
   `survey_guid` char(14) NOT NULL,
-  `name` varchar(25) NOT NULL,
+  `name` varchar(50) NOT NULL,
   `response_md5` varchar(32) NOT NULL,
   `intval` int(11) DEFAULT NULL,
   `floatval` float DEFAULT NULL,
