@@ -77,8 +77,8 @@ finercommon
                                 name: "My Fun Survey",
                                 organization_id: org.id,
                                 prospect_id: prosp.id,
-                                guid: "testsurvey",
-                                theme: "bokehdark",
+                                guid: "surveylight",
+                                theme: "bokehlight",
                                 survey_model: JSON.stringify(finercommon.models.Survey.getSurveyFixture())
                               }, (err, sv) => {
                                 if (err) {
@@ -86,10 +86,25 @@ finercommon
                                 } else {
                                   console.log(("Created survey " + sv.name + " for " + org.name + " with guid \"" + sv.guid + "\"...").green);
                                   console.log(("Load survey at http://localhost:8080/s/" + sv.guid).yellow)
-                                  console.log("Done.");
-                                  process.exit();
+                                  finercommon.models.Survey.Create(pjson.config, {
+                                    name: "My Fun Survey",
+                                    organization_id: org.id,
+                                    prospect_id: prosp.id,
+                                    guid: "surveydark",
+                                    theme: "bokehdark",
+                                    survey_model: JSON.stringify(finercommon.models.Survey.getSurveyFixture())
+                                  }, (err, sv) => {
+                                    if (err) {
+                                      console.log("ERROR".red, err);
+                                    } else {
+                                      console.log(("Created survey " + sv.name + " for " + org.name + " with guid \"" + sv.guid + "\"...").green);
+                                      console.log(("Load survey at http://localhost:8080/s/" + sv.guid).yellow)
+                                      console.log("Done.");
+                                      process.exit();
+                                    }
+                                  });
                                 }
-                              })
+                              });
                             }
                           })
                       }

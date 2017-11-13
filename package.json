@@ -31,7 +31,7 @@
       "db": "finerinkprod",
       "ssl": "false"
     },
-    "dbprod": {
+    "_db": {
       "host": "finerinkprod.ckumtmamqoyw.us-west-2.rds.amazonaws.com",
       "user": "finerinkadmin",
       "pw": "J39dK$sl_1!",
