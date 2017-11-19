@@ -5,6 +5,7 @@ USE `finerinkprod`;
 -- Host: localhost    Database: finerinkprod
 -- ------------------------------------------------------
 -- Server version	5.7.18
+USE `finerinkprod`;
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -45,7 +46,7 @@ CREATE TABLE `accounts` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -77,7 +78,7 @@ CREATE TABLE `approvals` (
   CONSTRAINT `contactaccountid` FOREIGN KEY (`crm_contact_id`) REFERENCES `crm_contacts` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `orgapprovalid` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `surveylnkd` FOREIGN KEY (`survey_guid`) REFERENCES `surveys` (`guid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -95,7 +96,7 @@ CREATE TABLE `crm_accounts` (
   `Metadata` blob,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `uid_UNIQUE` (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -117,7 +118,7 @@ CREATE TABLE `crm_contacts` (
   `Metadata` blob,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `Id_UNIQUE` (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -163,7 +164,7 @@ CREATE TABLE `crm_integrations` (
   UNIQUE KEY `uq_UNIQUE` (`uq`),
   KEY `forgi_idx` (`organization_id`),
   CONSTRAINT `forgi` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -184,7 +185,7 @@ CREATE TABLE `crm_opportunities` (
   `Metadata` blob,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -208,7 +209,7 @@ CREATE TABLE `crm_organizations` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `fk_org_integration_idx` (`integration_id`),
   CONSTRAINT `fk_org_integration` FOREIGN KEY (`integration_id`) REFERENCES `crm_integrations` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -227,7 +228,7 @@ CREATE TABLE `crm_roles` (
   PRIMARY KEY (`uid`),
   KEY `ft_roles_integration_idx` (`integration_id`),
   CONSTRAINT `ft_roles_integration` FOREIGN KEY (`integration_id`) REFERENCES `crm_integrations` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -247,7 +248,7 @@ CREATE TABLE `crm_users` (
   `Metadata` blob,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `id_UNIQUE` (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -271,7 +272,7 @@ CREATE TABLE `file_uploads` (
   UNIQUE KEY `uid_UNIQUE` (`uid`),
   KEY `userid` (`account_id`),
   KEY `userupload` (`account_id`,`upload_type`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -296,7 +297,7 @@ CREATE TABLE `org_account_associations` (
   KEY `account_assoc_idx` (`account_id`),
   CONSTRAINT `account_assoc` FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `org_assoc` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -322,7 +323,7 @@ CREATE TABLE `org_invitations` (
   KEY `uidUQ` (`uid`),
   CONSTRAINT `invitedby` FOREIGN KEY (`invited_by_account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `inviteorg` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -340,7 +341,7 @@ CREATE TABLE `organizations` (
   `is_active` tinyint(4) unsigned NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -360,7 +361,7 @@ CREATE TABLE `reset_pw_invitations` (
   UNIQUE KEY `id_UNIQUE` (`uid`),
   KEY `account_ref_idx` (`account_id`),
   CONSTRAINT `account_ref` FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -385,7 +386,7 @@ CREATE TABLE `respondents` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `survey_assoc_idx` (`survey_guid`),
   CONSTRAINT `survey_assoc` FOREIGN KEY (`survey_guid`) REFERENCES `surveys` (`guid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 ALTER TABLE `respondents` AUTO_INCREMENT=98496;
 --
@@ -456,7 +457,7 @@ CREATE TABLE `responses` (
   KEY `respondents_assoc_idx` (`respondent_id`),
   KEY `survname` (`survey_guid`,`name`),
   CONSTRAINT `respondents_assoc` FOREIGN KEY (`respondent_id`) REFERENCES `respondents` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -483,7 +484,7 @@ CREATE TABLE `surveys` (
   KEY `oppidlink_idx` (`opportunity_id`),
   CONSTRAINT `oppidlink` FOREIGN KEY (`opportunity_id`) REFERENCES `crm_opportunities` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `org_assoc_sv` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
