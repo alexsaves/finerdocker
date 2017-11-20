@@ -138,7 +138,7 @@ CREATE TABLE `crm_integration_rules` (
   PRIMARY KEY (`id`),
   KEY `integration_id_idx` (`integration_id`),
   CONSTRAINT `integration_id` FOREIGN KEY (`integration_id`) REFERENCES `crm_integrations` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -382,13 +382,15 @@ CREATE TABLE `respondents` (
   `time_zone` int(11) NOT NULL,
   `is_active` tinyint(4) unsigned NOT NULL DEFAULT '1',
   `approval_guid` char(14) NOT NULL,
+  `variables` blob NOT NULL,
+  `answers` blob NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `survey_assoc_idx` (`survey_guid`),
   CONSTRAINT `survey_assoc` FOREIGN KEY (`survey_guid`) REFERENCES `surveys` (`guid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-ALTER TABLE `respondents` AUTO_INCREMENT=98496;
+
 --
 -- Table structure for table `responses`
 --
