@@ -1,8 +1,11 @@
+CREATE DATABASE  IF NOT EXISTS `finerinkprod` /*!40100 DEFAULT CHARACTER SET latin1 */;
+USE `finerinkprod`;
 -- MySQL dump 10.13  Distrib 5.7.17, for macos10.12 (x86_64)
 --
 -- Host: localhost    Database: finerinkprod
 -- ------------------------------------------------------
 -- Server version	5.7.18
+USE `finerinkprod`;
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -115,6 +118,26 @@ CREATE TABLE `crm_contacts` (
   `Metadata` blob,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `Id_UNIQUE` (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `crm_integration_rules`
+--
+
+DROP TABLE IF EXISTS `crm_integration_rules`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `crm_integration_rules` (
+  `id` varchar(45) NOT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `owner_names` blob,
+  `owner_roles` blob,
+  `approvers` blob,
+  `integration_id` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `integration_id_idx` (`integration_id`),
+  CONSTRAINT `integration_id` FOREIGN KEY (`integration_id`) REFERENCES `crm_integrations` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -475,4 +498,4 @@ CREATE TABLE `surveys` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-03 17:56:10
+-- Dump completed on 2017-11-19 15:15:56
