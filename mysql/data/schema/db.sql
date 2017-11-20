@@ -160,7 +160,6 @@ CREATE TABLE `crm_integrations` (
   `owner_names` blob,
   `owner_roles` blob,
   UNIQUE KEY `uid_UNIQUE` (`uid`),
-  UNIQUE KEY `uq_UNIQUE` (`uq`),
   KEY `forgi_idx` (`organization_id`),
   CONSTRAINT `forgi` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
