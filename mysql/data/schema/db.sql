@@ -2,9 +2,9 @@ CREATE DATABASE  IF NOT EXISTS `finerinkprod` /*!40100 DEFAULT CHARACTER SET lat
 USE `finerinkprod`;
 -- MySQL dump 10.13  Distrib 5.7.17, for macos10.12 (x86_64)
 --
--- Host: 127.0.0.1    Database: finerinkprod
+-- Host: localhost    Database: finerinkprod
 -- ------------------------------------------------------
--- Server version	5.7.20
+-- Server version	5.7.18
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -45,7 +45,7 @@ CREATE TABLE `accounts` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -93,8 +93,11 @@ CREATE TABLE `crm_accounts` (
   `Name` varchar(100) DEFAULT NULL,
   `OwnerId` varchar(100) DEFAULT NULL,
   `Metadata` blob,
+  `integration_id` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY `uid_UNIQUE` (`Id`)
+  UNIQUE KEY `uid_UNIQUE` (`Id`),
+  KEY `integration_id_crm_accounts_idx` (`integration_id`),
+  CONSTRAINT `integration_id_crm_accounts` FOREIGN KEY (`integration_id`) REFERENCES `crm_integrations` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -115,8 +118,12 @@ CREATE TABLE `crm_contacts` (
   `Email` varchar(100) DEFAULT NULL,
   `Department` varchar(100) DEFAULT NULL,
   `Metadata` blob,
+  `Name` varchar(200) DEFAULT NULL,
+  `integration_id` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY `Id_UNIQUE` (`Id`)
+  UNIQUE KEY `Id_UNIQUE` (`Id`),
+  KEY `integration_id_crm_contacts_idx` (`integration_id`),
+  CONSTRAINT `integration_id_crm_contacts` FOREIGN KEY (`integration_id`) REFERENCES `crm_integrations` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -181,8 +188,13 @@ CREATE TABLE `crm_opportunities` (
   `OwnerId` varchar(100) DEFAULT NULL,
   `StageName` varchar(45) DEFAULT NULL,
   `Metadata` blob,
+  `Name` varchar(200) DEFAULT NULL,
+  `CloseDate` datetime DEFAULT NULL,
+  `integration_id` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `id_UNIQUE` (`id`)
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  KEY `integration_id_crm_opportunities_idx` (`integration_id`),
+  CONSTRAINT `integration_id_crm_opportunities` FOREIGN KEY (`integration_id`) REFERENCES `crm_integrations` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -244,8 +256,12 @@ CREATE TABLE `crm_users` (
   `Email` varchar(100) DEFAULT NULL,
   `Username` varchar(45) DEFAULT NULL,
   `Metadata` blob,
+  `integration_id` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`Id`),
-  UNIQUE KEY `id_UNIQUE` (`Id`)
+  UNIQUE KEY `id_UNIQUE` (`Id`),
+  KEY `integration_id_idx` (`integration_id`),
+  KEY `integration_id_crm_users_idx` (`integration_id`),
+  CONSTRAINT `integration_id_crm_users` FOREIGN KEY (`integration_id`) REFERENCES `crm_integrations` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -313,7 +329,7 @@ CREATE TABLE `org_account_associations` (
   KEY `account_assoc_idx` (`account_id`),
   CONSTRAINT `account_assoc` FOREIGN KEY (`account_id`) REFERENCES `accounts` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `org_assoc` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -360,7 +376,7 @@ CREATE TABLE `organizations` (
   `default_survey_template` varchar(20) NOT NULL DEFAULT 'bokehlight',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -482,6 +498,21 @@ CREATE TABLE `responses` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `sessions`
+--
+
+DROP TABLE IF EXISTS `sessions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `sessions` (
+  `session_id` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `expires` int(11) unsigned NOT NULL,
+  `data` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
+  PRIMARY KEY (`session_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `surveys`
 --
 
@@ -517,4 +548,4 @@ CREATE TABLE `surveys` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-11-19 17:01:38
+-- Dump completed on 2017-11-26 22:11:34
