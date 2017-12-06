@@ -371,6 +371,9 @@ CREATE TABLE `organizations` (
   `updated_at` datetime NOT NULL,
   `name` varchar(50) DEFAULT NULL,
   `is_active` tinyint(4) unsigned NOT NULL DEFAULT '1',
+  `feature_list` blob NOT NULL,
+  `competitor_list` blob NOT NULL,
+  `default_survey_template` varchar(20) NOT NULL DEFAULT 'bokehlight',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
