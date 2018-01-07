@@ -342,15 +342,12 @@ DROP TABLE IF EXISTS `daemon_history`;
 CREATE TABLE `daemon_history` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `created_at` datetime NOT NULL,
-  `updated_at` datetime NOT NULL,
-  `for_year` int(11) NOT NULL,
-  `for_month` int(11) NOT NULL,
-  `for_day` int(11) NOT NULL,
+  `updated_at` datetime NOT NULL,  
   `task_name` varchar(45) NOT NULL,
   `org_id` bigint(20) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
