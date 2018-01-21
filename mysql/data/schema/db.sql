@@ -18,10 +18,35 @@ USE `finerinkprod`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- DROPS IN CORRECT ORDER
+--
+DROP TABLE IF EXISTS `file_uploads`;
+DROP TABLE IF EXISTS `promo_signup`;
+DROP TABLE IF EXISTS `reset_pw_invitations`;
+DROP TABLE IF EXISTS `email_unsubscriptions`;
+DROP TABLE IF EXISTS `responses`;
+DROP TABLE IF EXISTS `respondents`;
+DROP TABLE IF EXISTS `sessions`;
+DROP TABLE IF EXISTS `org_invitations`;
+DROP TABLE IF EXISTS `daemon_history`;
+DROP TABLE IF EXISTS `crm_organizations`;
+DROP TABLE IF EXISTS `crm_integration_rules`;
+DROP TABLE IF EXISTS `crm_users`;
+DROP TABLE IF EXISTS `crm_roles`;
+DROP TABLE IF EXISTS `crm_accounts`;
+DROP TABLE IF EXISTS `approvals`;
+DROP TABLE IF EXISTS `crm_contacts`;
+DROP TABLE IF EXISTS `org_account_associations`;
+DROP TABLE IF EXISTS `surveys`;
+DROP TABLE IF EXISTS `crm_opportunities`;
+DROP TABLE IF EXISTS `crm_integrations`;
+DROP TABLE IF EXISTS `organizations`;
+DROP TABLE IF EXISTS `accounts`;
+
+--
 -- Table structure for table `accounts`
 --
 
-DROP TABLE IF EXISTS `accounts`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `accounts` (
@@ -52,7 +77,6 @@ CREATE TABLE `accounts` (
 -- Table structure for table `approvals`
 --
 
-DROP TABLE IF EXISTS `approvals`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `approvals` (
@@ -84,7 +108,6 @@ CREATE TABLE `approvals` (
 -- Table structure for table `crm_accounts`
 --
 
-DROP TABLE IF EXISTS `crm_accounts`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `crm_accounts` (
@@ -105,7 +128,6 @@ CREATE TABLE `crm_accounts` (
 -- Table structure for table `crm_contacts`
 --
 
-DROP TABLE IF EXISTS `crm_contacts`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `crm_contacts` (
@@ -131,7 +153,6 @@ CREATE TABLE `crm_contacts` (
 -- Table structure for table `crm_integration_rules`
 --
 
-DROP TABLE IF EXISTS `crm_integration_rules`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `crm_integration_rules` (
@@ -151,7 +172,6 @@ CREATE TABLE `crm_integration_rules` (
 -- Table structure for table `crm_integrations`
 --
 
-DROP TABLE IF EXISTS `crm_integrations`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `crm_integrations` (
@@ -173,10 +193,27 @@ CREATE TABLE `crm_integrations` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `promo_signup`
+--
+
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `promo_signup` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `email` varchar(60) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  UNIQUE KEY `email_UNIQUE` (`email`),
+  KEY `email_find` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `crm_opportunities`
 --
 
-DROP TABLE IF EXISTS `crm_opportunities`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `crm_opportunities` (
@@ -191,6 +228,7 @@ CREATE TABLE `crm_opportunities` (
   `Name` varchar(200) DEFAULT NULL,
   `CloseDate` datetime DEFAULT NULL,
   `integration_id` varchar(45) DEFAULT NULL,
+  `approval_status` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '0 = nothing has happened\n1 = some approval happened\n2 = cancelled',
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`),
   KEY `integration_id_crm_opportunities_idx` (`integration_id`),
@@ -202,7 +240,6 @@ CREATE TABLE `crm_opportunities` (
 -- Table structure for table `crm_organizations`
 --
 
-DROP TABLE IF EXISTS `crm_organizations`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `crm_organizations` (
@@ -226,7 +263,6 @@ CREATE TABLE `crm_organizations` (
 -- Table structure for table `crm_roles`
 --
 
-DROP TABLE IF EXISTS `crm_roles`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `crm_roles` (
@@ -245,7 +281,6 @@ CREATE TABLE `crm_roles` (
 -- Table structure for table `crm_users`
 --
 
-DROP TABLE IF EXISTS `crm_users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `crm_users` (
@@ -269,7 +304,6 @@ CREATE TABLE `crm_users` (
 -- Table structure for table `email_unsubscriptions`
 --
 
-DROP TABLE IF EXISTS `email_unsubscriptions`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `email_unsubscriptions` (
@@ -287,7 +321,6 @@ CREATE TABLE `email_unsubscriptions` (
 -- Table structure for table `file_uploads`
 --
 
-DROP TABLE IF EXISTS `file_uploads`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `file_uploads` (
@@ -311,7 +344,6 @@ CREATE TABLE `file_uploads` (
 -- Table structure for table `org_account_associations`
 --
 
-DROP TABLE IF EXISTS `org_account_associations`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `org_account_associations` (
@@ -336,7 +368,6 @@ CREATE TABLE `org_account_associations` (
 -- Table structure for table `daemon_history`
 --
 
-DROP TABLE IF EXISTS `daemon_history`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `daemon_history` (
@@ -354,7 +385,6 @@ CREATE TABLE `daemon_history` (
 -- Table structure for table `org_invitations`
 --
 
-DROP TABLE IF EXISTS `org_invitations`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `org_invitations` (
@@ -380,7 +410,6 @@ CREATE TABLE `org_invitations` (
 -- Table structure for table `organizations`
 --
 
-DROP TABLE IF EXISTS `organizations`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `organizations` (
@@ -401,7 +430,6 @@ CREATE TABLE `organizations` (
 -- Table structure for table `reset_pw_invitations`
 --
 
-DROP TABLE IF EXISTS `reset_pw_invitations`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `reset_pw_invitations` (
@@ -421,7 +449,6 @@ CREATE TABLE `reset_pw_invitations` (
 -- Table structure for table `respondents`
 --
 
-DROP TABLE IF EXISTS `respondents`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `respondents` (
@@ -448,7 +475,6 @@ CREATE TABLE `respondents` (
 -- Table structure for table `responses`
 --
 
-DROP TABLE IF EXISTS `responses`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `responses` (
@@ -534,7 +560,6 @@ CREATE TABLE `sessions` (
 -- Table structure for table `surveys`
 --
 
-DROP TABLE IF EXISTS `surveys`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `surveys` (
