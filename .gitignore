@@ -2,3 +2,4 @@ mysql/data/db/*
 /node_modules
 /package-lock.json
 /redis
+.DS_Store
