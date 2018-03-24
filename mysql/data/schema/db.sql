@@ -42,6 +42,7 @@ DROP TABLE IF EXISTS `crm_opportunities`;
 DROP TABLE IF EXISTS `crm_integrations`;
 DROP TABLE IF EXISTS `organizations`;
 DROP TABLE IF EXISTS `accounts`;
+DROP TABLE IF EXISTS `org_report_cache`;
 
 --
 -- Table structure for table `accounts`
@@ -424,6 +425,27 @@ CREATE TABLE `organizations` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `org_report_cache`
+--
+
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `org_report_cache` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `organization_id` int(11) NOT NULL,
+  `created_at` DATETIME NOT NULL,
+  `updated_at` DATETIME NOT NULL,
+  `report_type` INT NULL,
+  `created_for_year` INT UNSIGNED NULL,
+  `created_for_month` INT UNSIGNED NULL,
+  `report` BLOB NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC),
+  INDEX `org_report_key` (`organization_id` ASC),
+  CONSTRAINT `org_report_org_assoc` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
