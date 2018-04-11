@@ -94,7 +94,7 @@ CREATE TABLE `approvals` (
   `opportunity_id` varchar(36) NOT NULL,
   `survey_guid` char(14) NOT NULL,
   PRIMARY KEY (`guid`),
-  UNIQUE KEY `orgactuq` (`crm_contact_id`,`organization_id`),
+  UNIQUE KEY `orgactuq` (`crm_contact_id`,`organization_id`,`opportunity_id`),
   KEY `orgapprovalid_idx` (`organization_id`),
   KEY `contactaccountid_idx` (`crm_contact_id`),
   KEY `oppidlink_idx` (`opportunity_id`),
