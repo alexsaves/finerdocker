@@ -43,6 +43,7 @@ DROP TABLE IF EXISTS `crm_integrations`;
 DROP TABLE IF EXISTS `organizations`;
 DROP TABLE IF EXISTS `accounts`;
 DROP TABLE IF EXISTS `org_report_cache`;
+DROP TABLE IF EXISTS `email_charts`;
 
 --
 -- Table structure for table `accounts`
@@ -425,6 +426,30 @@ CREATE TABLE `organizations` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `email_charts`
+--
+
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+
+CREATE TABLE `email_charts` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `content_type` VARCHAR(45) NOT NULL,
+  `created_at` DATETIME NOT NULL,
+  `updated_at` DATETIME NOT NULL,
+  `image_contents` BLOB NOT NULL,
+  `organization_id` INT(11) NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `id_UNIQUE` (`id` ASC),
+  INDEX `chart_org_idx` (`organization_id` ASC),
+  CONSTRAINT `chart_org`
+    FOREIGN KEY (`organization_id`)
+    REFERENCES `finerinkprod`.`organizations` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE);
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
