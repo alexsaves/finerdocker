@@ -442,8 +442,10 @@ CREATE TABLE `email_charts` (
   `updated_at` DATETIME NOT NULL,
   `image_contents` BLOB NOT NULL,
   `organization_id` INT(11) NULL,
+  `img_hash` VARCHAR(32) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
+  UNIQUE INDEX `img_hash_UNIQUE` (`img_hash` ASC)
   INDEX `chart_org_idx` (`organization_id` ASC),
   CONSTRAINT `chart_org`
     FOREIGN KEY (`organization_id`)
