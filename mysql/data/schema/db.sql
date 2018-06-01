@@ -440,7 +440,7 @@ CREATE TABLE `email_charts` (
   `content_type` VARCHAR(45) NOT NULL,
   `created_at` DATETIME NOT NULL,
   `updated_at` DATETIME NOT NULL,
-  `image_contents` BLOB NOT NULL,
+  `image_contents` LONGBLOB NOT NULL,
   `organization_id` INT(11) NULL,
   `img_hash` VARCHAR(32) NOT NULL,
   PRIMARY KEY (`id`),
