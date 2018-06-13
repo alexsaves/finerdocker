@@ -3,7 +3,7 @@ services:
   mysql:
     container_name: finerink_mysql
     restart: always
-    image: mysql:latest
+    image: mysql:5.7.22
     ports:
       - "3306:3306"
     environment:
