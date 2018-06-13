@@ -434,24 +434,20 @@ CREATE TABLE `organizations` (
 
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-
 CREATE TABLE `email_charts` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `content_type` VARCHAR(45) NOT NULL,
-  `created_at` DATETIME NOT NULL,
-  `updated_at` DATETIME NOT NULL,
-  `image_contents` LONGBLOB NOT NULL,
-  `organization_id` INT(11) NULL,
-  `img_hash` VARCHAR(32) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `content_type` varchar(45) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  `image_contents` longblob NOT NULL,
+  `organization_id` int(11) DEFAULT NULL,
+  `img_hash` varchar(32) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE INDEX `id_UNIQUE` (`id` ASC),
-  UNIQUE INDEX `img_hash_UNIQUE` (`img_hash` ASC)
-  INDEX `chart_org_idx` (`organization_id` ASC),
-  CONSTRAINT `chart_org`
-    FOREIGN KEY (`organization_id`)
-    REFERENCES `finerinkprod`.`organizations` (`id`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE);
+  UNIQUE KEY `id_UNIQUE` (`id`),
+  UNIQUE KEY `img_hash_eq` (`img_hash`),
+  KEY `org_chart_email_k_idx` (`organization_id`),
+  CONSTRAINT `org_chart_email_k` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
