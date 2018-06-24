@@ -44,6 +44,7 @@ DROP TABLE IF EXISTS `organizations`;
 DROP TABLE IF EXISTS `accounts`;
 DROP TABLE IF EXISTS `org_report_cache`;
 DROP TABLE IF EXISTS `email_charts`;
+DROP TABLE IF EXISTS `crm_opportunity_roles`;
 
 --
 -- Table structure for table `accounts`
@@ -123,6 +124,23 @@ CREATE TABLE `crm_accounts` (
   KEY `integration_id_crm_accounts_idx` (`integration_id`),
   CONSTRAINT `integration_id_crm_accounts` FOREIGN KEY (`integration_id`) REFERENCES `crm_integrations` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `crm_opportunity_roles`
+--
+
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `finerinkprod`.`crm_opportunity_roles` (
+  `ContactId` VARCHAR(40) NOT NULL,
+  `IsDeleted` TINYINT(1) NULL,
+  `IsPrimary` TINYINT(1) NULL,
+  `OpportunityId` VARCHAR(45) NULL,
+  `Role` VARCHAR(100) NULL,
+  'integration_id', VARCHAR(45) NULL,
+  PRIMARY KEY (`ContactId`))
+
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
