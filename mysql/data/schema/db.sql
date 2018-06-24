@@ -138,9 +138,8 @@ CREATE TABLE `finerinkprod`.`crm_opportunity_roles` (
   `IsPrimary` TINYINT(1) NULL,
   `OpportunityId` VARCHAR(45) NULL,
   `Role` VARCHAR(100) NULL,
-  'integration_id', VARCHAR(45) NULL,
-  PRIMARY KEY (`ContactId`))
-
+  `integration_id` VARCHAR(45) NULL,
+  PRIMARY KEY (`ContactId`));
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
