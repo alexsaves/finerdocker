@@ -99,8 +99,7 @@ CREATE TABLE `approvals` (
   KEY `orgapprovalid_idx` (`organization_id`),
   KEY `contactaccountid_idx` (`crm_contact_id`),
   KEY `oppidlink_idx` (`opportunity_id`),
-  KEY `surveylnkd_idx` (`survey_guid`),
-  CONSTRAINT `contactaccountid` FOREIGN KEY (`crm_contact_id`) REFERENCES `crm_contacts` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  KEY `surveylnkd_idx` (`survey_guid`),  
   CONSTRAINT `orgapprovalid` FOREIGN KEY (`organization_id`) REFERENCES `organizations` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `surveylnkd` FOREIGN KEY (`survey_guid`) REFERENCES `surveys` (`guid`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
