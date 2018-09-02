@@ -6,6 +6,7 @@ services:
     image: mysql:5.7.22
     ports:
       - "3306:3306"
+    command: --max_allowed_packet=32505856  
     environment:
       MYSQL_DATABASE: 'finerinkprod'
       MYSQL_ROOT_PASSWORD: 'FinerInk'
