@@ -134,12 +134,13 @@ CREATE TABLE `crm_accounts` (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `finerinkprod`.`crm_opportunity_roles` (
   `ContactId` VARCHAR(40) NOT NULL,
+  'id' VARCHAR(40) NOT NULL,
   `IsDeleted` TINYINT(1) NULL,
   `IsPrimary` TINYINT(1) NULL,
   `OpportunityId` VARCHAR(45) NULL,
   `Role` VARCHAR(100) NULL,
   `integration_id` VARCHAR(45) NULL,
-  PRIMARY KEY (`ContactId`));
+  PRIMARY KEY (`id`));
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
