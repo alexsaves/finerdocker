@@ -3,9 +3,10 @@ services:
   mysql:
     container_name: finerink_mysql
     restart: always
-    image: mysql:latest
+    image: mysql:8.0.13
     ports:
       - "3306:3306"
+    command: --max_allowed_packet=32505856  
     environment:
       MYSQL_DATABASE: 'finerinkprod'
       MYSQL_ROOT_PASSWORD: 'FinerInk'
