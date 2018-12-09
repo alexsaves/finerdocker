@@ -310,8 +310,39 @@ const GenerateSurveyResponseModel = function () {
     }
   };
 
+  // Did they pick "other"
   if (resultModel.answers.whyNotSelected.responses.indexOf(9999) > -1) {
     resultModel.answers.whyNotSelected.other = loremIpsum({ count: 3, units: 'words' });
+  }
+
+  // Did they pick "price"
+  if (resultModel.answers.whyNotSelected.responses.indexOf(0) > -1) {
+    const priceOptions = [
+      0,
+      1,
+      2,
+      3
+    ];
+    resultModel.answers.pricingModel = priceOptions[Math.floor(Math.random() * priceOptions.length)];
+    switch (resultModel.answers.pricingModel) {
+      case 0:
+        resultModel.answers.flatFeeAmountDetails = Math.round(Math.random() * 25000) + 1000;
+        break;
+      case 1:
+        resultModel.answers.annualSubscriptionDetails = Math.round(Math.random() * 25000) + 1000;
+        break;
+      case 2:
+        resultModel.answers.percentageRateDetails = loremIpsum({ count: 10, units: 'words' });
+        break;
+      case 3:
+        resultModel.answers.pricePerVolumeDetails = loremIpsum({ count: 10, units: 'words' });      
+        break;
+    }
+  }
+
+  // They picked product and service features
+  if (resultModel.answers.whyNotSelected.responses.indexOf(1) > -1) {
+    
   }
 
   return resultModel;
