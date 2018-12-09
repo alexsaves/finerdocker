@@ -24,7 +24,7 @@ prompt.get([{
   type: 'number',
   default: 0,
   required: true
-},{
+}, {
   name: 'email',
   description: 'What is the email address of the account?',
   type: 'string',
@@ -43,6 +43,13 @@ prompt.get([{
   description: 'How many opportunities per day?',
   type: 'number',
   default: 2,
+  required: true
+},
+{
+  name: 'salesorgsize',
+  description: 'How big is your sales organization?',
+  type: 'number',
+  default: 10,
   required: true
 },
 {
@@ -70,7 +77,7 @@ prompt.get([{
   pjson.config.pool = connectionPool;
 
   // Start
-  GenerateDataForAccount(pjson.config, result.email, result.days, result.oppsperday, result.respondents).then((err, res) => {
+  GenerateDataForAccount(pjson.config, result.email, result.days, result.oppsperday, result.respondents, result.salesorgsize).then((err, res) => {
     console.log("Done!");
     process.exit(1);
   }).catch((e) => {
@@ -85,7 +92,7 @@ prompt.get([{
  * @param {ConnectionPool} pool 
  * @param {String} email 
  */
-const GenerateDataForAccount = async function(cfg, email, days, oppsperday, resps) {
+const GenerateDataForAccount = async function (cfg, email, days, oppsperday, resps, salesorgsize) {
   console.log("\nLocating account (".yellow + email.magenta + ")...".yellow);
   const account = await models.Account.GetByEmailAsync(cfg, email);
   if (!account) {
@@ -98,7 +105,7 @@ const GenerateDataForAccount = async function(cfg, email, days, oppsperday, resp
   const orgs = await account.getOrganizationsAsync(cfg);
   for (let i = 0; i < orgs.length; i++) {
     const org = orgs[i];
-    await GenerateDataForOrg(cfg, org, days, oppsperday, resps);
+    await GenerateDataForOrg(cfg, org, days, oppsperday, resps, salesorgsize);
   }
 };
 
@@ -107,13 +114,13 @@ const GenerateDataForAccount = async function(cfg, email, days, oppsperday, resp
  * @param {Config} cfg 
  * @param {Organization} org 
  */
-const GenerateDataForOrg = async function(cfg, org, days, oppsperday, resps) {
+const GenerateDataForOrg = async function (cfg, org, days, oppsperday, resps, salesorgsize) {
   console.log("Creating fixtures for (".yellow + org.name.magenta + ")...".yellow);
   console.log("Getting integrations...".yellow);
   const intrs = await org.getIntegrationsAsync(cfg);
   for (let i = 0; i < intrs.length; i++) {
     const intr = intrs[i];
-    await GenerateDataForInt(cfg, org, intr, days, oppsperday, resps);
+    await GenerateDataForInt(cfg, org, intr, days, oppsperday, resps, salesorgsize);
   }
 };
 
@@ -122,10 +129,36 @@ const GenerateDataForOrg = async function(cfg, org, days, oppsperday, resps) {
  * @param {Config} cfg 
  * @param {Organization} org 
  */
-const GenerateDataForInt = async function(cfg, org, intr, days, oppsperday, resps) {
+const GenerateDataForInt = async function (cfg, org, intr, days, oppsperday, resps, salesorgsize) {
   console.log("Creating fixtures for integration (".yellow + intr.crm_type.magenta + ")...".yellow);
   console.log("Clearing data for integration...".red);
   await intr.clearOpportunityDataAsync(cfg);
+  console.log('Creating ('.yellow + salesorgsize.toString().magenta + ') CRM Users...'.yellow);
+  const salesOrgList = [];
+  for (let i = 0; i < salesorgsize; i++) {
+    // Make the company
+    const fname = faker.name.firstName();
+    const lname = faker.name.lastName();
+    const uemail = faker.internet.email();
+    const crmUserInfo = {
+      Id: shortid.generate().toUpperCase(),
+      FirstName: fname,
+      LastName: lname,
+      Name: fname + ' ' + lname,
+      Email: uemail,
+      Username: uemail
+    };
+    const extraFields = [{
+      name: 'integration_id',
+      value: intr.uid
+    },
+    {
+      name: 'Metadata',
+      value: Buffer.from(JSON.stringify({}))
+    }];
+    salesOrgList.push(crmUserInfo);
+    const cuser = await models.CRMUsers.CreateAsync(cfg, [crmUserInfo], extraFields);
+  }
   console.log(`Generating opportunities (${days} days with ${oppsperday} per day with ${resps} respondents per opportunity)`.yellow);
   const hourincrements = (24 / oppsperday);
   // Start iterating over time
@@ -135,7 +168,7 @@ const GenerateDataForInt = async function(cfg, org, intr, days, oppsperday, resp
   console.log(`Will make opportunities from ${startDate.format('LLLL')} to ${endDate.format('LLLL')}...`.yellow);
   while (movingDate.isBefore(endDate)) {
     movingDate.add(hourincrements, 'hours');
-    await GenerateOpportunity(cfg, org, intr, movingDate.clone(), resps);
+    await GenerateOpportunity(cfg, org, intr, movingDate.clone(), resps, salesOrgList);
   }
 };
 
@@ -146,11 +179,12 @@ const GenerateDataForInt = async function(cfg, org, intr, days, oppsperday, resp
  * @param {*} intr 
  * @param {*} when 
  */
-const GenerateOpportunity = async function(cfg, org, intr, when, resps) {
+const GenerateOpportunity = async function (cfg, org, intr, when, resps, salesOrgUsers) {
+  const salesPerson = salesOrgUsers[Math.floor(Math.random() * salesOrgUsers.length)];
   // Make the company
   const companyAccountInfo = {
     Id: shortid.generate().toUpperCase(),
-    OwnerId: shortid.generate().toUpperCase(),
+    OwnerId: salesPerson.Id,
     Name: faker.company.companyName()
   };
   const extraFields = [{
@@ -161,6 +195,73 @@ const GenerateOpportunity = async function(cfg, org, intr, when, resps) {
     name: 'Metadata',
     value: Buffer.from(JSON.stringify({}))
   }];
+  // Create the propect (company) entry
   const cact = await models.CRMAccounts.CreateAsync(cfg, [companyAccountInfo], extraFields);
+
+  // Create the opportunity entry
+  const opportunityInfo = {
+    Id: shortid.generate().toUpperCase(),
+    AccountId: companyAccountInfo.Id,
+    Amount: Math.round((Math.random() * 100000) + 10000),
+    IsClosed: true,
+    IsWon: false,
+    OwnerId: salesPerson.Id,
+    StageName: "Closed Lost",
+    MetaData: Buffer.from(JSON.stringify({})),
+    Name: companyAccountInfo.Name + " Opportunity",
+    CloseDate: when.format("YYYY-MM-DD HH:mm:ss"),
+    integration_id: intr.uid,
+    approval_status: true
+  };
+  const oppExtraFields = [{
+    name: 'integration_id',
+    value: intr.uid
+  }];
+  const oppResult = await models.CRMOpportunities.CreateAsync(cfg, [opportunityInfo], oppExtraFields);
+  await models.CRMOpportunities.setApprovalStatusOnIdAsync(cfg, true, opportunityInfo.Id);
   
+  // Create the contacts for the opportunity and their opportunity roles
+  const contactRoles = [
+    "Executive Sponsor",
+    "Economic Buyer",
+    "Business User",
+    "Economic Decision Maker"
+  ];
+  const oppContacts = [];
+  for (let i = 0; i < resps; i++) {
+    const fname = faker.name.firstName();
+    const lname = faker.name.lastName();
+    const uemail = faker.internet.email();
+    const oppContact = {
+      Id: shortid.generate().toUpperCase(),
+      OwnerId: salesPerson.Id,
+      FirstName: fname,
+      LastName: lname,
+      Title: faker.name.jobTitle(),
+      Email: uemail,
+      MetaData: Buffer.from(JSON.stringify({})),
+      Name: fname + ' ' + lname,
+      integration_id: intr.uid
+    };
+    oppContacts.push(oppContact);
+    const contactResult = await models.CRMContacts.CreateAsync(cfg, [oppContact], oppExtraFields);
+    const oppRole = {
+      ContactId: oppContact.Id,
+      Id: shortid.generate().toUpperCase(),
+      IsPrimary: (i === 0) ? 1 : 0,
+      OpportunityId: opportunityInfo.Id,
+      Role: contactRoles[Math.floor(Math.random() * contactRoles.length)]
+    };
+    oppContact.role = oppRole;
+    const roleResult = await models.CRMOpportunityRoles.CreateAsync(cfg, [oppRole], oppExtraFields);
+  }
+
+  // Create the survey (one for salesperson and one for contacts)
+  
+
+  // Decide the general characteristics of the salesperson's response
+
+  // Decide the general characteristics of the contacts responses
+
+  // Input the responses
 };
