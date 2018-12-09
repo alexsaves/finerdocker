@@ -335,15 +335,89 @@ const GenerateSurveyResponseModel = function () {
         resultModel.answers.percentageRateDetails = loremIpsum({ count: 10, units: 'words' });
         break;
       case 3:
-        resultModel.answers.pricePerVolumeDetails = loremIpsum({ count: 10, units: 'words' });      
+        resultModel.answers.pricePerVolumeDetails = loremIpsum({ count: 10, units: 'words' });
         break;
     }
   }
 
   // They picked product and service features
   if (resultModel.answers.whyNotSelected.responses.indexOf(1) > -1) {
-    
+    const missingFeatureOpts = [
+      0,
+      1,
+      2,
+      3,
+      4,
+      9999
+    ];
+    resultModel.answers.missingFeature = {
+      response: missingFeatureOpts[Math.floor(Math.random() * missingFeatureOpts.length)],
+      other: ""
+    };
+    // Fill the other
+    if (resultModel.answers.missingFeature.response == 9999) {
+      resultModel.answers.missingFeature.other = loremIpsum({ count: 3, units: 'words' });
+    }
   }
 
+  // They picked does not meet our business needs
+  if (resultModel.answers.whyNotSelected.responses.indexOf(2) > -1) {
+    resultModel.answers.valueReasons = loremIpsum({ count: 10, units: 'words' });
+  }
+
+  // They picked timeliness of delivery
+  if (resultModel.answers.whyNotSelected.responses.indexOf(3) > -1) {
+    const deliveryTimelinessOpts = [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ];
+    resultModel.answers.desiredTimeline.response = deliveryTimelinessOpts[Math.floor(Math.random() * deliveryTimelinessOpts.length)];
+  }
+
+  // They picked customer service
+  if (resultModel.answers.whyNotSelected.responses.indexOf(4) > -1) {
+    resultModel.answers.serviceReasons = loremIpsum({ count: 10, units: 'words' });
+  }
+
+  // They picked external factors
+  if (resultModel.answers.whyNotSelected.responses.indexOf(5) > -1) {
+    const extReasonsWhyNotOpts = [
+      0,
+      1,
+      2,
+      9999
+    ];
+    resultModel.answers.externalReasonsWhyNot = {
+      response: extReasonsWhyNotOpts[<  3Math.floor(Math.random() * extReasonsWhyNotOpts.length)],
+      other: ""
+    };
+    // Fill the other
+    if (resultModel.answers.externalReasonsWhyNot.response == 9999) {
+      resultModel.answers.externalReasonsWhyNot.other = loremIpsum({ count: 3, units: 'words' });
+    }
+  }
+
+  // External vendor criteria
+  const extVendorCrit = [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    9999
+  ];
+  resultModel.answers.mostImportantVendorCriteria = {order: [], other: ""};
+  while (extVendorCrit.length > 0) {
+    resultModel.answers.mostImportantVendorCriteria.order.push(extVendorCrit.splice(Math.floor(Math.random() * extReasonsWhyNotOpts.length), 1)[0]);
+  }
+  // if "other" is high
+  if (resultModel.answers.mostImportantVendorCriteria.order.indexOf(9999) < 3) {
+    resultModel.answers.mostImportantVendorCriteria.other = loremIpsum({ count: 3, units: 'words' });
+  }
   return resultModel;
 };
