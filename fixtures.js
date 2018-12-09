@@ -219,7 +219,7 @@ const GenerateOpportunity = async function (cfg, org, intr, when, resps, salesOr
   }];
   const oppResult = await models.CRMOpportunities.CreateAsync(cfg, [opportunityInfo], oppExtraFields);
   await models.CRMOpportunities.setApprovalStatusOnIdAsync(cfg, true, opportunityInfo.Id);
-  
+
   // Create the contacts for the opportunity and their opportunity roles
   const contactRoles = [
     "Executive Sponsor",
@@ -257,7 +257,26 @@ const GenerateOpportunity = async function (cfg, org, intr, when, resps, salesOr
   }
 
   // Create the survey (one for salesperson and one for contacts)
-  
+  const employeeSv = await models.Survey.CreateAsync(cfg, {
+    organization_id: org.id,
+    survey_type: models.Survey.SURVEY_TYPES.EMPLOYEE,
+    survey_model: Buffer.from(JSON.stringify(models.Survey.getSurveyFixture(models.Survey.SURVEY_TYPES.EMPLOYEE))),
+    name: companyAccountInfo.Name + " Feedback",
+    is_active: 1,
+    opportunity_id: opportunityInfo.Id,
+    created_at: when.toDate(),
+    updated_at: when.toDate()
+  });
+  const contactSv = await models.Survey.CreateAsync(cfg, {
+    organization_id: org.id,
+    survey_type: models.Survey.SURVEY_TYPES.PROSPECT,
+    survey_model: Buffer.from(JSON.stringify(models.Survey.getSurveyFixture(models.Survey.SURVEY_TYPES.PROSPECT))),
+    name: companyAccountInfo.Name + " Feedback",
+    is_active: 1,
+    opportunity_id: opportunityInfo.Id,
+    created_at: when.toDate(),
+    updated_at: when.toDate()
+  });
 
   // Decide the general characteristics of the salesperson's response
 
