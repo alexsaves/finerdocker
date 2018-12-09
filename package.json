@@ -21,6 +21,7 @@
     "colors": "^1.1.2",
     "faker": "^4.1.0",
     "finercommon": "git+https://1e37470bfae9c1cb98c12c99b100edaea16bc73e:x-oauth-basic@github.com/thefinerink/finercommon.git",
+    "lorem-ipsum": "^1.0.6",
     "md5": "^2.2.1",
     "moment": "^2.22.2",
     "mysql": "^2.13.0",

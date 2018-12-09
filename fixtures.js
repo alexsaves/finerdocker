@@ -8,6 +8,7 @@ const prompt = require('prompt');
 const moment = require('moment');
 const faker = require('faker');
 const shortid = require('shortid');
+const loremIpsum = require('lorem-ipsum');
 
 console.log("FinerInk Fixture Creator".yellow);
 //
@@ -40,7 +41,7 @@ prompt.get([{
 },
 {
   name: 'oppsperday',
-  description: 'How many opportunities per day?',
+  description: 'How many average opportunities per day?',
   type: 'number',
   default: 2,
   required: true
@@ -279,8 +280,39 @@ const GenerateOpportunity = async function (cfg, org, intr, when, resps, salesOr
   });
 
   // Decide the general characteristics of the salesperson's response
+  const salesPersonModel = GenerateSurveyResponseModel();
+  console.log(JSON.stringify(salesPersonModel));
 
   // Decide the general characteristics of the contacts responses
 
   // Input the responses
+};
+
+/**
+ * Make a response model
+ */
+const GenerateSurveyResponseModel = function () {
+  const resultModel = {};
+  const mainReasonsNotChosen = [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    9999
+  ];
+  resultModel.answers = {
+    buyXRating: Math.floor(Math.random() * 7) + 1,
+    whyNotSelected: {
+      responses: [mainReasonsNotChosen.splice(Math.floor(Math.random() * mainReasonsNotChosen.length), 1)[0], mainReasonsNotChosen.splice(Math.floor(Math.random() * mainReasonsNotChosen.length), 1)[0]],
+      other: ""
+    }
+  };
+
+  if (resultModel.answers.whyNotSelected.responses.indexOf(9999) > -1) {
+    resultModel.answers.whyNotSelected.other = loremIpsum({ count: 3, units: 'words' });
+  }
+
+  return resultModel;
 };
