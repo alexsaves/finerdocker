@@ -7,6 +7,7 @@ const md5 = require('md5');
 const prompt = require('prompt');
 const moment = require('moment');
 const faker = require('faker');
+const shortid = require('shortid');
 
 console.log("FinerInk Fixture Creator".yellow);
 //
@@ -146,5 +147,20 @@ const GenerateDataForInt = async function(cfg, org, intr, days, oppsperday, resp
  * @param {*} when 
  */
 const GenerateOpportunity = async function(cfg, org, intr, when, resps) {
-
+  // Make the company
+  const companyAccountInfo = {
+    Id: shortid.generate().toUpperCase(),
+    OwnerId: shortid.generate().toUpperCase(),
+    Name: faker.company.companyName()
+  };
+  const extraFields = [{
+    name: 'integration_id',
+    value: intr.uid
+  },
+  {
+    name: 'Metadata',
+    value: Buffer.from(JSON.stringify({}))
+  }];
+  const cact = await models.CRMAccounts.CreateAsync(cfg, [companyAccountInfo], extraFields);
+  
 };
