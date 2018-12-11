@@ -1,6 +1,6 @@
 {
   "name": "docker",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Run this command to start the db `docker-compose up`, to clear the database and start from scratch delete the db folder under data",
   "main": "index.js",
   "scripts": {
@@ -20,7 +20,7 @@
   "dependencies": {
     "colors": "^1.1.2",
     "faker": "^4.1.0",
-    "finercommon": "git+https://2bac8defa59ab38af52813592ce04ca026a3702f:x-oauth-basic@github.com/thefinerink/finercommon.git#0.3.2",
+    "finercommon": "git+https://2bac8defa59ab38af52813592ce04ca026a3702f:x-oauth-basic@github.com/thefinerink/finercommon.git#0.3.4",
     "lorem-ipsum": "^1.0.6",
     "md5": "^2.2.1",
     "moment": "^2.22.2",

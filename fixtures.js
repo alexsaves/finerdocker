@@ -41,9 +41,9 @@ prompt.get([{
 },
 {
   name: 'oppsperday',
-  description: 'How many average opportunities per day?',
+  description: 'How many maximum opportunities per day?',
   type: 'number',
-  default: 2,
+  default: 3,
   required: true
 },
 {
@@ -68,9 +68,9 @@ prompt.get([{
 
   const dbCluster = {
     connectionLimit: 5,
-    host: pjson.config.db.host,
-    user: pjson.config.db.user,
-    password: pjson.config.db.pw
+    host: dbVars.host,
+    user: dbVars.user,
+    password: dbVars.pw
   };
 
   // Set up the connection pool
@@ -168,7 +168,13 @@ const GenerateDataForInt = async function (cfg, account, org, intr, days, oppspe
   const movingDate = startDate.clone();
   console.log(`Will make opportunities from ${startDate.format('LLLL')} to ${endDate.format('LLLL')}...`.yellow);
   while (movingDate.isBefore(endDate)) {
-    movingDate.add(hourincrements, 'hours');
+    console.log("Making opportunity and data for ".yellow + movingDate.format('LLLL').magenta + "...".yellow);
+    const randIncr = Math.random();
+    var addlHrs = 0;
+    if (randIncr > 0.7) {
+      addlHrs = Math.random() * 48 * 2;
+    }
+    movingDate.add(hourincrements + addlHrs, 'hours');
     await GenerateOpportunity(cfg, account, org, intr, movingDate.clone(), resps, salesOrgList);
   }
 };
