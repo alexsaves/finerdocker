@@ -106,7 +106,7 @@ const GenerateDataForAccount = async function (cfg, email, days, oppsperday, res
   const orgs = await account.getOrganizationsAsync(cfg);
   for (let i = 0; i < orgs.length; i++) {
     const org = orgs[i];
-    await GenerateDataForOrg(cfg, org, days, oppsperday, resps, salesorgsize);
+    await GenerateDataForOrg(cfg, account, org, days, oppsperday, resps, salesorgsize);
   }
 };
 
@@ -115,13 +115,13 @@ const GenerateDataForAccount = async function (cfg, email, days, oppsperday, res
  * @param {Config} cfg 
  * @param {Organization} org 
  */
-const GenerateDataForOrg = async function (cfg, org, days, oppsperday, resps, salesorgsize) {
+const GenerateDataForOrg = async function (cfg, account, org, days, oppsperday, resps, salesorgsize) {
   console.log("Creating fixtures for (".yellow + org.name.magenta + ")...".yellow);
   console.log("Getting integrations...".yellow);
   const intrs = await org.getIntegrationsAsync(cfg);
   for (let i = 0; i < intrs.length; i++) {
     const intr = intrs[i];
-    await GenerateDataForInt(cfg, org, intr, days, oppsperday, resps, salesorgsize);
+    await GenerateDataForInt(cfg, account, org, intr, days, oppsperday, resps, salesorgsize);
   }
 };
 
@@ -130,7 +130,7 @@ const GenerateDataForOrg = async function (cfg, org, days, oppsperday, resps, sa
  * @param {Config} cfg 
  * @param {Organization} org 
  */
-const GenerateDataForInt = async function (cfg, org, intr, days, oppsperday, resps, salesorgsize) {
+const GenerateDataForInt = async function (cfg, account, org, intr, days, oppsperday, resps, salesorgsize) {
   console.log("Creating fixtures for integration (".yellow + intr.crm_type.magenta + ")...".yellow);
   console.log("Clearing data for integration...".red);
   await intr.clearOpportunityDataAsync(cfg);
@@ -169,7 +169,7 @@ const GenerateDataForInt = async function (cfg, org, intr, days, oppsperday, res
   console.log(`Will make opportunities from ${startDate.format('LLLL')} to ${endDate.format('LLLL')}...`.yellow);
   while (movingDate.isBefore(endDate)) {
     movingDate.add(hourincrements, 'hours');
-    await GenerateOpportunity(cfg, org, intr, movingDate.clone(), resps, salesOrgList);
+    await GenerateOpportunity(cfg, account, org, intr, movingDate.clone(), resps, salesOrgList);
   }
 };
 
@@ -180,7 +180,7 @@ const GenerateDataForInt = async function (cfg, org, intr, days, oppsperday, res
  * @param {*} intr 
  * @param {*} when 
  */
-const GenerateOpportunity = async function (cfg, org, intr, when, resps, salesOrgUsers) {
+const GenerateOpportunity = async function (cfg, account, org, intr, when, resps, salesOrgUsers) {
   const salesPerson = salesOrgUsers[Math.floor(Math.random() * salesOrgUsers.length)];
   // Make the company
   const companyAccountInfo = {
@@ -280,18 +280,77 @@ const GenerateOpportunity = async function (cfg, org, intr, when, resps, salesOr
   });
 
   // Decide the general characteristics of the salesperson's response
-  const salesPersonModel = GenerateSurveyResponseModel();
-  console.log(JSON.stringify(salesPersonModel));
-
+  await GenerateRespondent(cfg, when, account, org, companyAccountInfo, salesPerson, null, true, employeeSv, org.feature_list, org.competitor_list, oppContacts);
+  
   // Decide the general characteristics of the contacts responses
 
   // Input the responses
 };
 
+const GenerateRespondent = async function(cfg, when, account, org, companyAccountInfo, salesPerson, contact, isSalesperson, sv, featureList, competitorList, oppContacts) {
+  // Make the approval entry
+  const apr = await models.Approval.CreateAsync(cfg, {
+    sendEmail: 1,
+    sendState: models.Approval.SEND_STATES.SENT,
+    created_at: when.toDate(),
+    updated_at: when.toDate(),
+    created_by_account_id: account.id,
+    organization_id: org.id,
+    crm_contact_id: !isSalesperson ? contact.Id: null,
+    crm_user_id: isSalesperson ? salesPerson.Id : null,
+    survey_guid: sv.guid
+  });
+
+  // Get the survey response
+  const respModel = GenerateSurveyResponseModel(org.feature_list, org.competitor_list, oppContacts);
+
+  // Set the variables
+  const respVars = {
+    companyName : org.name,
+    prospectName : companyAccountInfo.Name,
+    surveyTheme : org.default_survey_template,
+    surveyTitle : org.name + " Feedback",
+    decisionMakerList : ""
+  };
+
+  for (let i = 0; i < org.competitor_list.length; i++) {
+    respVars["competitor" + (i + 1)] = org.competitor_list[i];
+  }
+
+  for (let i = 0; i < org.feature_list.length; i++) {
+    respVars["feature" + (i + 1)] = org.feature_list[i];
+  }
+
+  for (let i = 0; i < oppContacts.length; i++) {
+    respVars["decisionMaker" + (i + 1)] = oppContacts[i].Name + ", " + oppContacts[i].Title;
+    if (i > 0) {
+      respVars.decisionMakerList += ", ";
+    }
+    respVars.decisionMakerList += oppContacts[i].Name;    
+  }
+
+  // Create the respondent
+  const respEntry = await models.Respondent.CreateAsync(cfg, {
+    created_at: when.toDate(),
+    updated_at: when.toDate(),
+    survey_guid: sv.guid,
+    user_agent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.110 Safari/537.36",
+    ip_addr: "::1",
+    time_zone: 480,
+    is_active: 1,
+    approval_guid: apr.guid,
+    variables: respVars,
+    answers: respModel
+  });
+
+  // Apply the answers
+  await respEntry.applyAnswersForSurveyAsync(cfg, sv, {answers: respModel});
+};
+
 /**
  * Make a response model
  */
-const GenerateSurveyResponseModel = function () {
+const GenerateSurveyResponseModel = function (featureList, competitorList, oppContacts) {
   const resultModel = {};
   const mainReasonsNotChosen = [
     0,
@@ -375,6 +434,7 @@ const GenerateSurveyResponseModel = function () {
       4,
       5
     ];
+    resultModel.answers.desiredTimeline = {};
     resultModel.answers.desiredTimeline.response = deliveryTimelinessOpts[Math.floor(Math.random() * deliveryTimelinessOpts.length)];
   }
 
@@ -392,7 +452,7 @@ const GenerateSurveyResponseModel = function () {
       9999
     ];
     resultModel.answers.externalReasonsWhyNot = {
-      response: extReasonsWhyNotOpts[<  3Math.floor(Math.random() * extReasonsWhyNotOpts.length)],
+      response: extReasonsWhyNotOpts[Math.floor(Math.random() * extReasonsWhyNotOpts.length)],
       other: ""
     };
     // Fill the other
@@ -413,11 +473,89 @@ const GenerateSurveyResponseModel = function () {
   ];
   resultModel.answers.mostImportantVendorCriteria = {order: [], other: ""};
   while (extVendorCrit.length > 0) {
-    resultModel.answers.mostImportantVendorCriteria.order.push(extVendorCrit.splice(Math.floor(Math.random() * extReasonsWhyNotOpts.length), 1)[0]);
+    resultModel.answers.mostImportantVendorCriteria.order.push(extVendorCrit.splice(Math.floor(Math.random() * extVendorCrit.length), 1)[0]);
   }
   // if "other" is high
   if (resultModel.answers.mostImportantVendorCriteria.order.indexOf(9999) < 3) {
     resultModel.answers.mostImportantVendorCriteria.other = loremIpsum({ count: 3, units: 'words' });
   }
-  return resultModel;
+
+  // How well did the vendor do in each area
+  resultModel.answers.howWellInAreas = [
+    Math.floor(Math.random() * 7) + 1,
+    Math.floor(Math.random() * 7) + 1,
+    Math.floor(Math.random() * 7) + 1
+  ];
+
+  // Handle frequency and responsiveness
+  resultModel.answers.frequencyRating = Math.random() * 100;
+  resultModel.answers.responsivenessRating = Math.random() * 100;
+
+  // Competitor ranking
+  const competitorQPossibleAnswers = [];
+  for (let i = 0; i < competitorList.length + 2; i++) {
+    competitorQPossibleAnswers.push(i);
+  }
+  competitorQPossibleAnswers.push(9999);
+  resultModel.answers.vendorRankings = {order: [], other: ""};
+  while (competitorQPossibleAnswers.length > 0) {
+    resultModel.answers.vendorRankings.order.push(competitorQPossibleAnswers.splice(Math.floor(Math.random() * competitorQPossibleAnswers.length), 1)[0]);
+  }
+  // if "other" is high
+  if (resultModel.answers.vendorRankings.order.indexOf(9999) < 3) {
+    resultModel.answers.vendorRankings.other = faker.company.companyName(); // Company name
+  }
+
+  // Reasons why winner was chosen
+  const winnerChosenOpts = [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    9999
+  ];
+  resultModel.answers.reasonsWhyWinnerChosen = {
+    responses: [winnerChosenOpts.splice(Math.floor(Math.random() * winnerChosenOpts.length), 1)[0], winnerChosenOpts.splice(Math.floor(Math.random() * winnerChosenOpts.length), 1)[0]],
+    other: ""
+  };
+  // Fill the other
+  if (resultModel.answers.reasonsWhyWinnerChosen.responses.indexOf(9999) < 3) {
+    resultModel.answers.reasonsWhyWinnerChosen.other = loremIpsum({ count: 3, units: 'words' });
+  }
+
+  // Compared to your ideal vendor
+  resultModel.answers.rateWinningVendor = [
+    Math.floor(Math.random() * 7) + 1,
+    Math.floor(Math.random() * 7) + 1,
+    Math.floor(Math.random() * 7) + 1,
+    Math.floor(Math.random() * 7) + 1,
+    Math.floor(Math.random() * 7) + 1,
+    Math.floor(Math.random() * 7) + 1
+  ];
+
+  // Add a major player
+  resultModel.answers.majorPlayersList = [
+    faker.name.firstName() + " " + faker.name.lastName() + ", " + faker.name.jobTitle(),
+    "",
+    "",
+    ""
+  ];
+
+  // Handle the ratings for the contacts
+  for (let i = 0; i < oppContacts.length; i++) {
+    resultModel.answers["decisionMaker" + (i + 1) + "Influence"] = Math.random() * 100;
+  }
+
+  resultModel.answers["decisionMakerCustom0Influence"] = Math.random() * 100;
+
+  // Reconnect
+  resultModel.answers.reconnect = Math.floor(Math.random() * 7) + 1;
+
+  // One piece of advice
+  resultModel.answers.onePieceAdvice = loremIpsum({ count: 10, units: 'words' });
+  
+  // Spit out the result
+  return resultModel.answers;
 };

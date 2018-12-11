@@ -18,7 +18,7 @@ services:
   redis:
     container_name: finerink_redis
     restart: always
-    image: 'bitnami/redis:latest'
+    image: 'bitnami/redis:5.0.2'
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
     ports:
