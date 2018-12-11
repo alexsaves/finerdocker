@@ -280,14 +280,10 @@ const GenerateOpportunity = async function (cfg, account, org, intr, when, resps
   });
 
   // Decide the general characteristics of the salesperson's response
-  await GenerateRespondent(cfg, when, account, org, companyAccountInfo, salesPerson, null, true, employeeSv, org.feature_list, org.competitor_list, oppContacts);
-  
-  // Decide the general characteristics of the contacts responses
-
-  // Input the responses
+  await GenerateRespondent(cfg, when, opportunityInfo.Id, account, org, companyAccountInfo, salesPerson, null, true, employeeSv, org.feature_list, org.competitor_list, oppContacts);
 };
 
-const GenerateRespondent = async function(cfg, when, account, org, companyAccountInfo, salesPerson, contact, isSalesperson, sv, featureList, competitorList, oppContacts) {
+const GenerateRespondent = async function(cfg, when, oppid, account, org, companyAccountInfo, salesPerson, contact, isSalesperson, sv, featureList, competitorList, oppContacts) {
   // Make the approval entry
   const apr = await models.Approval.CreateAsync(cfg, {
     sendEmail: 1,
@@ -298,7 +294,8 @@ const GenerateRespondent = async function(cfg, when, account, org, companyAccoun
     organization_id: org.id,
     crm_contact_id: !isSalesperson ? contact.Id: null,
     crm_user_id: isSalesperson ? salesPerson.Id : null,
-    survey_guid: sv.guid
+    survey_guid: sv.guid,
+    opportunity_id: oppid
   });
 
   // Get the survey response
@@ -548,7 +545,7 @@ const GenerateSurveyResponseModel = function (featureList, competitorList, oppCo
     resultModel.answers["decisionMaker" + (i + 1) + "Influence"] = Math.random() * 100;
   }
 
-  resultModel.answers["decisionMakerCustom0Influence"] = Math.random() * 100;
+  resultModel.answers["decisionMakerCustom1Influence"] = Math.random() * 100;
 
   // Reconnect
   resultModel.answers.reconnect = Math.floor(Math.random() * 7) + 1;
