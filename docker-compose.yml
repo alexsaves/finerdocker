@@ -3,7 +3,7 @@ services:
   mysql:
     container_name: finerink_mysql
     restart: always
-    image: mysql:8.0.13
+    image: mysql:5.7.24
     ports:
       - "3306:3306"
     command: --max_allowed_packet=32505856  
@@ -18,7 +18,7 @@ services:
   redis:
     container_name: finerink_redis
     restart: always
-    image: 'bitnami/redis:latest'
+    image: 'bitnami/redis:5.0.2'
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
     ports:

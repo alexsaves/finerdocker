@@ -1,6 +1,6 @@
 {
   "name": "docker",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Run this command to start the db `docker-compose up`, to clear the database and start from scratch delete the db folder under data",
   "main": "index.js",
   "scripts": {
@@ -19,20 +19,27 @@
   "homepage": "https://github.com/thefinerink/docker#readme",
   "dependencies": {
     "colors": "^1.1.2",
-    "finercommon": "git+https://1e37470bfae9c1cb98c12c99b100edaea16bc73e:x-oauth-basic@github.com/thefinerink/finercommon.git",
+    "faker": "^4.1.0",
+    "finercommon": "git+https://2bac8defa59ab38af52813592ce04ca026a3702f:x-oauth-basic@github.com/thefinerink/finercommon.git#0.3.2",
+    "lorem-ipsum": "^1.0.6",
     "md5": "^2.2.1",
-    "mysql": "^2.13.0"
+    "moment": "^2.22.2",
+    "mysql": "^2.13.0",
+    "prompt": "^1.0.0",
+    "shortid": "^2.2.14",
+    "uuid": "^3.3.2"
   },
   "config": {
     "db": {
-      "host": "localhost",
+      "host": "127.0.0.1",
       "user": "finerAdmin",
       "pw": "finerPass",
       "db": "finerinkprod",
-      "ssl": "false"
+      "ssl": "false",
+      "port": "3306"
     },
-    "_db": {
-      "host": "finerinkprod.ckumtmamqoyw.us-west-2.rds.amazonaws.com",
+    "dbProd": {
+      "host": "finerink-cluster.cluster-ckumtmamqoyw.us-west-2.rds.amazonaws.com",
       "user": "finerinkadmin",
       "pw": "J39dK$sl_1!",
       "db": "finerinkprod",
