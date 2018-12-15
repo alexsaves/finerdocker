@@ -16,7 +16,7 @@
   "bugs": {
     "url": "https://github.com/thefinerink/docker/issues"
   },
-  "homepage": "https://github.com/thefinerink/docker#readme",  
+  "homepage": "https://github.com/thefinerink/docker#readme",
   "config": {
     "db": {
       "host": "127.0.0.1",
