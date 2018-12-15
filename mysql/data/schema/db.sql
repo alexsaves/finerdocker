@@ -176,6 +176,7 @@ CREATE TABLE `crm_contacts` (
 /*!40101 SET character_set_client = UTF8MB4 */;
 CREATE TABLE `crm_integration_rules` (
   `id` varchar(45) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `owner_names` blob,
   `owner_roles` blob,
