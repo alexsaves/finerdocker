@@ -630,7 +630,7 @@ CREATE TABLE `surveys` (
   `created_at` datetime NOT NULL,
   `updated_at` datetime NOT NULL,
   `survey_model` blob NOT NULL,
-  `name` varchar(50) NOT NULL,
+  `name` varchar(100) NOT NULL,
   `organization_id` int(11) NOT NULL,
   `theme` varchar(12) NOT NULL,
   `is_active` tinyint(4) unsigned NOT NULL DEFAULT '1',
