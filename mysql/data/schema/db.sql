@@ -482,7 +482,7 @@ CREATE TABLE `org_report_cache` (
   `report_type` INT NULL,
   `created_for_year` INT UNSIGNED NULL,
   `created_for_month` INT UNSIGNED NULL,
-  `report` BLOB NULL,
+  `report` LONGBLOB NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
   INDEX `org_report_key` (`organization_id` ASC),
